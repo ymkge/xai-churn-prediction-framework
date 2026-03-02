@@ -1,1 +1,31 @@
 # xai-churn-prediction-framework
+Explainable AI (XAI) を用いた顧客離脱予測と意思決定支援のデモンストレーション
+
+本プロジェクトは、大手教育サービス（サブスクリプションモデル）を想定したダミーデータを用い、高精度な離脱予測モデルの構築から、最新のXAI手法（SHAP, ICE, DiCE）を用いた「施策の意思決定支援」までのエンドツーエンドなフローを提示するものです。
+
+単なる「予測」に留まらず、事業サイドが「次に何をすべきか」を導き出すための、実務的なデータサイエンス・パイプラインを提案します。
+
+1. 分析の背景と目的教育サービスにおいて、顧客の継続利用（LTVの最大化）は最重要課題です。
+本フレームワークでは以下の3ステップを実現します。
+- 高精度な予測: LightGBMを用い、離脱リスクの高いユーザーを特定。
+- 要因の解釈: SHAPおよびICEを用い、なぜそのユーザーが離脱しそうなのか、特定の変数がどう影響しているかを可視化。
+- 具体的アクションの導出: DiCEによる反実仮想（Counterfactual）シミュレーションを通じ、継続に転じさせるための具体的な閾値や施策を提示。
+
+2. リポジトリ構成実務での運用を意識し、前処理、学習、分析のプロセスを分割して管理しています。
+
+├── data/
+│   └── sample_churn_data.csv    # 教育サービスを模したダミーデータ
+├── notebooks/
+│   ├── 01_eda_and_pca.ipynb     # 特徴量エンジニアリングとPCAによる可視化
+│   ├── 02_model_training.ipynb  # LightGBMによる学習と評価
+│   └── 03_xai_and_action.ipynb  # SHAP, ICE, DiCEを用いた意思決定分析
+├── src/
+│   ├── preprocessing.py         # データクレンジング・特徴量生成
+│   └── visualization.py         # XAI結果のカスタム可視化関数
+├── requirements.txt             # 実行に必要なライブラリ一覧
+└── README.md                    # 本ドキュメント
+
+3. 技術スタックと活用シーン手法役割活用シーンLightGBMPredict離脱確率の算出。不均衡データへの対応。SHAPExplain個別顧客の離脱要因の特定。モデルの透明性確保。ICEAnalyze「学習時間が〇時間を超えると離脱率が下がる」といった感度分析。DiCEAction「あと2回ログインを促せば継続する」といった具体的施策のシミュレーション。4. 主な分析結果（Demo Insights）SHAPによる重要要因の特定分析の結果、離脱に最も寄与しているのは「直近1ヶ月のログイン頻度」と「学習進捗率」であることが判明しました。ICEによる感度分析全体の平均（PDP）ではログイン頻度に比例して継続率が上がりますが、ICEによる個別分析の結果、**「特定の教材を利用している層」においては、ログイン頻度が多すぎると逆に離脱リスクが高まる（＝オーバーワークによる燃え尽き）**という非線形な挙動を特定しました。DiCEによる施策シミュレーション離脱リスク80%以上のユーザーに対し、「価格割引」と「サポート架電」のどちらが有効かをDiCEで生成。結果、特定のセグメントに対しては、**「翌月の受講料を10%割り引くよりも、サポートから1回電話をする方が継続に転じる可能性が高い」**というアクションの優先順位を導出しました。5. セットアップBashgit clone https://github.com/your-username/xai-churn-prediction-framework.git
+cd xai-churn-prediction-framework
+pip install -r requirements.txt
+AuthorymtoFreelance IT Consultant / Data ScientistFocus: AI-driven DX Support and Data Analysis
